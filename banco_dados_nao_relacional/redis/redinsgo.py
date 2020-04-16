@@ -20,12 +20,10 @@ def montar_codigos_jogadores(n):
 def preparar_dados(r, codigos_jogadores):
     print('Preparando dados...')
     limpar_dados(r, codigos_jogadores)
-
     popular_conjunto_numeros(r)
-
     popular_jogadores(r, codigos_jogadores)
-
     popular_cartelas(r, codigos_jogadores)
+    popular_scores(r, codigos_jogadores)
 
 def limpar_dados(r, codigos_jogadores):
     r.delete('numeros')
@@ -58,6 +56,10 @@ def popular_cartelas(r, codigos_jogadores):
                 r.sadd(chave_cartela, numero_aleatorio)
                 quantidade_numeros = len(r.smembers(chave_cartela))
 
+def popular_scores(r, codigos_jogadores):
+    for codigo_jogador in codigos_jogadores:
+        r.set('score:' + codigo_jogador, 0)
+
 def main(args):
     print('Bem vindo ao Redinsgo, o bingo que mais te da sorte!')
     r = redis.Redis(host='localhost', port=6379, db=0)
@@ -67,20 +69,32 @@ def main(args):
     preparar_dados(r, codigos_jogadores)
 
     ha_vencedor = False
-    nome_vencedor = None
+    codigo_vencedor = None
     numeros_sorteados = set()
     while not ha_vencedor:
-        numero = input('Informe um número entre 1 e 99 ou 0 para sair:')
+        numero = int(input('Informe um número entre 1 e 99 ou 0 para sair:'))
         if(numero == 0):    
             break
 
         if(numero in numeros_sorteados):
-            print('Número {} já foi sorteado! Escolha outro...')
+            print('Número {} já foi sorteado! Escolha outro...'.format(numero))
             continue
-        
+
+        numeros_sorteados.add(numero)
+
+        for codigo_jogador in codigos_jogadores:
+            if(r.sismember('cartela:' + codigo_jogador, numero)):
+                r.incr('score:' + codigo_jogador, 1)
+                if(int(r.get('score:' + codigo_jogador)) == 15):
+                    ha_vencedor = True
+                    codigo_vencedor = codigo_jogador
     
     if ha_vencedor:
+        nome_vencedor = str(r.hget('user:' + codigo_vencedor, 'name'))
+        cartela_vencedor = r.smembers('cartela:' + codigo_vencedor)
         print('Usuário "{}" venceu essa partida!'.format(nome_vencedor))
+        print('Cartela do Vencedor = {}'.format(cartela_vencedor))
+        print('Número Sorteados = {}'.format(numeros_sorteados))
             
     print('Saindo do Redinsgo...')
 
