@@ -66,9 +66,11 @@ Acessar o container e importar o arquivo copiado `mongo italian-people.js`.
 `db.italians.find( { "age": { "$gte": 12, "$lte": 18 } } ).count()`
 
 ### 4. Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois.
-`db.italians.find( { "cat": { $exists: true } } ).count()`
-`db.italians.find( { "dog": { $exists: true } } ).count()`
-`db.italians.find( { $and: [ { "dog": { $exists: false } }, { "cat": { $exists: false } } ] } ).count()`
+```
+db.italians.find( { "cat": { $exists: true } } ).count()
+db.italians.find( { "dog": { $exists: true } } ).count()
+db.italians.find( { $and: [ { "dog": { $exists: false } }, { "cat": { $exists: false } } ] } ).count()
+```
 
 ### 5. Liste/Conte todas as pessoas acima de 60 anos que tenham gato.
 `db.italians.find( { $and: [ { "age": { $gt: 60 } }, { "cat": { $exists: true } } ] } ).count()`
