@@ -13,6 +13,7 @@ Conectar no mongo com `mongo`.
 
 `use petshop` para criar o database.
 
+Pré inserir os dados:
 ```
 db.pets.insert({name:"Mike", species: "Hamster"})
 db.pets.insert({name:"Dolly", species: "Peixe"})
