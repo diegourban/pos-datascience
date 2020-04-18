@@ -70,7 +70,9 @@ def main(args):
 
     ha_vencedor = False
     codigo_vencedor = None
+    
     numeros_sorteados = set()
+
     while not ha_vencedor:
         numero = int(input('Informe um número entre 1 e 99 ou 0 para sair:'))
         if(numero == 0):    
