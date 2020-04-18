@@ -19,62 +19,62 @@ def montar_codigos_jogadores(n):
 
 def preparar_dados(r, codigos_jogadores):
     print('Preparando dados...')
-    limpar_dados(r, codigos_jogadores)
-    popular_conjunto_numeros(r)
-    popular_jogadores(r, codigos_jogadores)
-    popular_cartelas(r, codigos_jogadores)
-    popular_scores(r, codigos_jogadores)
 
-def limpar_dados(r, codigos_jogadores):
+    gerar_conjunto_numeros_sorteaveis(r)
+
+    for codigo_jogador in codigos_jogadores:
+        gerar_dados_jogador(r, codigo_jogador)
+
+def gerar_conjunto_numeros_sorteaveis(r):
     r.delete('numeros')
-    for codigo in codigos_jogadores:
-        r.delete('user:' + codigo)
-        r.delete('cartela:' + codigo)
-        r.delete('score:' + codigo)
-
-def popular_conjunto_numeros(r):
     for i in range(1, 100):
         r.sadd('numeros', i)
 
-def popular_jogadores(r, codigos_jogadores):
-    for codigo_jogador in codigos_jogadores:
-        chave_jogador = 'user:' + codigo_jogador
-        nome = 'user' + codigo_jogador
-        chave_cartela = 'cartela:' + codigo_jogador
-        chave_score = 'score:' + codigo_jogador
-        r.hmset(chave_jogador, {'name': nome, 'bcartela': chave_cartela, 'bscore': chave_score})
+def gerar_dados_jogador(r, codigo_jogador):
+    chave_jogador = 'jogador:' + codigo_jogador
+    chave_cartela = 'cartela:' + codigo_jogador
+    chave_pontuacao = 'pontuacao:' + codigo_jogador
 
-def popular_cartelas(r, codigos_jogadores):
-    for codigo_jogador in codigos_jogadores:
-        chave_cartela = 'cartela:' + codigo_jogador
-        quantidade_numeros = len(r.smembers(chave_cartela))
-        while quantidade_numeros < 15:
+    r.delete(chave_jogador)
+    r.delete(chave_cartela)
+    r.delete(chave_pontuacao)
+
+    nome = 'jogador' + codigo_jogador
+    r.hmset(chave_jogador, {'nome': nome, 'bcartela': chave_cartela, 'bpontuacao': chave_pontuacao})
+
+    popular_cartela(r, chave_cartela)
+    popular_pontuacao(r, chave_pontuacao)
+
+def popular_cartela(r, chave_cartela):
+    quantidade_numeros = len(r.smembers(chave_cartela))
+    while quantidade_numeros < 15:
+        numero_aleatorio = r.srandmember('numeros')
+        if r.sismember(chave_cartela, numero_aleatorio):
             numero_aleatorio = r.srandmember('numeros')
-            if r.sismember(chave_cartela, numero_aleatorio):
-                numero_aleatorio = r.srandmember('numeros')
-            else:
-                r.sadd(chave_cartela, numero_aleatorio)
-                quantidade_numeros = len(r.smembers(chave_cartela))
+        else:
+            r.sadd(chave_cartela, numero_aleatorio)
+            quantidade_numeros = len(r.smembers(chave_cartela))
 
-def popular_scores(r, codigos_jogadores):
-    for codigo_jogador in codigos_jogadores:
-        r.set('score:' + codigo_jogador, 0)
+def popular_pontuacao(r, chave_pontuacao):
+    r.set(chave_pontuacao, 0)
 
 def main(args):
+    print('----------------------------------------------------')
     print('Bem vindo ao Redinsgo, o bingo que mais te da sorte!')
+    print('----------------------------------------------------')
     r = redis.Redis(host='localhost', port=6379, db=0)
 
     codigos_jogadores = montar_codigos_jogadores(args.n_jogadores)
     
     preparar_dados(r, codigos_jogadores)
 
-    ha_vencedor = False
+    gritou_bingo = False
     codigo_vencedor = None
-    
+
     numeros_sorteados = set()
 
-    while not ha_vencedor:
-        numero = int(input('Informe um número entre 1 e 99 ou 0 para sair:'))
+    while not gritou_bingo:
+        numero = int(input('Informe um número entre 1 e 99 ou 0 para sair: '))
         if(numero == 0):    
             break
 
@@ -86,13 +86,13 @@ def main(args):
 
         for codigo_jogador in codigos_jogadores:
             if(r.sismember('cartela:' + codigo_jogador, numero)):
-                r.incr('score:' + codigo_jogador, 1)
-                if(int(r.get('score:' + codigo_jogador)) == 15):
-                    ha_vencedor = True
+                r.incr('pontuacao:' + codigo_jogador, 1)
+                if(int(r.get('pontuacao:' + codigo_jogador)) == 15):
+                    gritou_bingo = True
                     codigo_vencedor = codigo_jogador
     
-    if ha_vencedor:
-        nome_vencedor = str(r.hget('user:' + codigo_vencedor, 'name'))
+    if gritou_bingo:
+        nome_vencedor = str(r.hget('jogador:' + codigo_vencedor, 'nome'))
         cartela_vencedor = r.smembers('cartela:' + codigo_vencedor)
         print('Usuário "{}" venceu essa partida!'.format(nome_vencedor))
         print('Cartela do Vencedor = {}'.format(cartela_vencedor))
