@@ -12,6 +12,14 @@ def parse_args():
         help='Quantidade de jogadores do Redinsgo.'
     )
 
+    ap.add_argument(
+        '--modo-auto',
+        type=bool,
+        required=False,
+        default=False,
+        help='Habilita o modo de sorteio automático.'
+    )
+
     return ap.parse_args()
 
 def montar_codigos_jogadores(n):
@@ -58,6 +66,12 @@ def popular_cartela(r, chave_cartela):
 def popular_pontuacao(r, chave_pontuacao):
     r.set(chave_pontuacao, 0)
 
+def sortear_numero(r, modo_auto) :
+    if(modo_auto):
+        return int(r.srandmember('numeros'))
+    else:
+        return int(input('Informe um número entre 1 e 99 ou 0 para sair: '))
+
 def main(args):
     print('----------------------------------------------------')
     print('Bem vindo ao Redinsgo, o bingo que mais te da sorte!')
@@ -67,6 +81,7 @@ def main(args):
     codigos_jogadores = montar_codigos_jogadores(args.n_jogadores)
     
     preparar_dados(r, codigos_jogadores)
+    print('Iniciando o Jogo no modo de sorteio {}.'.format('Automático' if args.modo_auto else 'Manual'))
 
     gritou_bingo = False
     codigo_vencedor = None
@@ -74,12 +89,18 @@ def main(args):
     numeros_sorteados = set()
 
     while not gritou_bingo:
-        numero = int(input('Informe um número entre 1 e 99 ou 0 para sair: '))
-        if(numero == 0):    
+        numero = sortear_numero(r, args.modo_auto)
+
+        if(numero == 0):   
             break
 
+        if(numero < 1 or numero > 99):
+            print('Número inválido!')
+            continue
+
         if(numero in numeros_sorteados):
-            print('Número {} já foi sorteado! Escolha outro...'.format(numero))
+            if(not args.modo_auto):
+                print('Número {} já foi sorteado! Escolha outro...'.format(numero))
             continue
 
         numeros_sorteados.add(numero)
@@ -92,11 +113,11 @@ def main(args):
                     codigo_vencedor = codigo_jogador
     
     if gritou_bingo:
-        nome_vencedor = str(r.hget('jogador:' + codigo_vencedor, 'nome'))
-        cartela_vencedor = r.smembers('cartela:' + codigo_vencedor)
-        print('Usuário "{}" venceu essa partida!'.format(nome_vencedor))
+        nome_vencedor = r.hget('jogador:' + codigo_vencedor, 'nome').decode()
+        cartela_vencedor = sorted(list(map(int, r.smembers('cartela:' + codigo_vencedor))))
+        print('Bingo! o "{}" venceu!'.format(nome_vencedor))
         print('Cartela do Vencedor = {}'.format(cartela_vencedor))
-        print('Número Sorteados = {}'.format(numeros_sorteados))
+        print('Número Sorteados = {}'.format(sorted(list(map(int, numeros_sorteados)))))
             
     print('Saindo do Redinsgo...')
 
