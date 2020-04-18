@@ -50,6 +50,53 @@ db.pets.insert({name:"Chuck", species: "Gato"})
 ### Evidência
 ![Comandos Exercício 1](print_comandos_exercicio_1.png)
 
-## Exercício 2
+## Exercício 2 - Mama mia!
+
+Copiando arquivo para dentro do container do mongo: `docker cp /home/urban/italian-people.js mongodb-furb:/`
+
+Acessar o container e importar o arquivo copiado `mongo italian-people.js`.
+
+### 1. Liste/Conte todas as pessoas que tem exatamente 99 anos. Você pode usar um count para indicar a quantidade.
+`db.italians.find({"age": 99}).count()`
+
+### 2. Identifique quantas pessoas são elegíveis atendimento prioritário (pessoas com mais de 65 anos).
+`db.italians.find({"age": {"$gt": 65}}).count()`
+
+### 3. Identifique todos os jovens (pessoas entre 12 a 18 anos).
+`db.italians.find({"age": {"$gte": 12, "$lte": 18}}).count()`
+
+### 4. Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois.
+
+### 5. Liste/Conte todas as pessoas acima de 60 anos que tenham gato.
+
+### 6. Liste/Conte todos os jovens com cachorro.
+
+### 7. Utilizando o $where, liste todas as pessoas que tem gato e cachorro.
+
+### 8. Liste todas as pessoas mais novas que seus respectivos gatos.
+
+### 9. Liste as pessoas que tem o mesmo nome que seu bichano (gatou ou cachorro).
+
+### 10. Projete apenas o nome e sobrenome das pessoas com tipo de sangue de fator RH negativo.
+
+### 11. Projete apenas os animais dos italianos. Devem ser listados os animais com nome e idade. Não mostre o identificado do mongo (ObjectId).
+
+### 12. Quais são as 5 pessoas mais velhas com sobrenome Rossi?
+
+### 13. Crie um italiano que tenha um leão como animal de estimação. Associe um nome e idade ao bichano.
+
+### 14. Infelizmente o Leão comeu o italiano. Remova essa pessoa usando o Id.
+
+### 15. Passou um ano. Atualize a idade de todos os italianos e dos bichanos em 1.
+
+### 16. O Corona Vírus chegou na Itália e misteriosamente atingiu pessoas somente com gatos e de 66 anos. Remova esses italianos.
+
+### 17. Utilizando o framework agregate, liste apenas as pessoas com nomes iguais a sua respectiva mãe e que tenha gato ou cachorro.
+
+### 18. Utilizando aggregate framework, faça uma lista de nomes única de nomes. Faça isso usando apenas o primeiro nome.
+
+### 19. Agora faça a mesma lista do item acima, considerando nome completo.
+
+### 20. rocure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos.
 
 ## Exercício 3
