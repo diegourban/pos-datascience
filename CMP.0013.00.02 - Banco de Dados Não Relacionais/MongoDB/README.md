@@ -57,27 +57,48 @@ Copiando arquivo para dentro do container do mongo: `docker cp /home/urban/itali
 Acessar o container e importar o arquivo copiado `mongo italian-people.js`.
 
 ### 1. Liste/Conte todas as pessoas que tem exatamente 99 anos. Você pode usar um count para indicar a quantidade.
-`db.italians.find({"age": 99}).count()`
+`db.italians.find( { "age": 99 } ).count()`
 
 ### 2. Identifique quantas pessoas são elegíveis atendimento prioritário (pessoas com mais de 65 anos).
-`db.italians.find({"age": {"$gt": 65}}).count()`
+`db.italians.find( { "age": { "$gt": 65 } } ).count()`
 
 ### 3. Identifique todos os jovens (pessoas entre 12 a 18 anos).
-`db.italians.find({"age": {"$gte": 12, "$lte": 18}}).count()`
+`db.italians.find( { "age": { "$gte": 12, "$lte": 18 } } ).count()`
 
 ### 4. Identifique quantas pessoas tem gatos, quantas tem cachorro e quantas não tem nenhum dos dois.
+`db.italians.find( { "cat": { $exists: true } } ).count()`
+`db.italians.find( { "dog": { $exists: true } } ).count()`
+`db.italians.find( { $and: [ { "dog": { $exists: false } }, { "cat": { $exists: false } } ] } ).count()`
 
 ### 5. Liste/Conte todas as pessoas acima de 60 anos que tenham gato.
+`db.italians.find( { $and: [ { "age": { $gt: 60 } }, { "cat": { $exists: true } } ] } ).count()`
 
 ### 6. Liste/Conte todos os jovens com cachorro.
+`db.italians.find( { $and: [ { "age": { "$gte": 12, "$lte": 18 } }, { "dog": { $exists: true } } ] } ).count()`
 
 ### 7. Utilizando o $where, liste todas as pessoas que tem gato e cachorro.
+```
+db.italians.find( { $where: function() { 
+    return this.cat != null && this.dog != null
+} } );
+```
 
 ### 8. Liste todas as pessoas mais novas que seus respectivos gatos.
+```
+db.italians.find( { $where: function() { 
+    return this.cat != null && this.age < this.cat.age
+} } );
+```
 
 ### 9. Liste as pessoas que tem o mesmo nome que seu bichano (gatou ou cachorro).
+```
+db.italians.find( { $where: function() {
+    return (this.cat != null && this.cat.name == this.name) || (this.dog != null && this.dog.name == this.name)
+} } );
+```
 
 ### 10. Projete apenas o nome e sobrenome das pessoas com tipo de sangue de fator RH negativo.
+`db.italians.find( { "bloodType": /.*-/ }, { "surname": 1, "_id": 0 } )`
 
 ### 11. Projete apenas os animais dos italianos. Devem ser listados os animais com nome e idade. Não mostre o identificado do mongo (ObjectId).
 
