@@ -177,4 +177,7 @@ db.italians.aggregate([
 ])
 ```
 
+### Evidência
+![Comandos Exercício 2](print_comandos_exercicio_2.png)
+
 ## Exercício 3
