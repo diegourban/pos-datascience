@@ -126,7 +126,7 @@ db.italians.find( { $where: function() {
 ```
 db.italians.aggregate([
     { $match: { "mother": { $exists: true } } },
-    { $match: { $or: [ {"cat": { $exists: true } }, {"dog": { $exists: true } } ] } },
+    { $match: { $or: [ { "cat": { $exists: true } }, { "dog": { $exists: true } } ] } },
     { $project: {
         "firstname": 1,
         "mother": 1,
@@ -146,7 +146,35 @@ db.italians.aggregate([
 ```
 
 ### 19. Agora faça a mesma lista do item acima, considerando nome completo.
+```
+db.italians.aggregate([
+    { $project: {
+        "firstname": 1,
+        "surname": 1,
+        "fullname": { $concat: [ "$firstname", " ", "$surname" ] }
+    }},
+    { $group: { 
+        "_id": "$fullname" 
+    }}
+])
+```
 
 ### 20. Procure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos.
+```
+db.italians.aggregate([
+    { $match: { $and: [ { "age": { $gt: 20 } }, { "age": { $lt: 60 } } ] } },
+    { $match: { $or: [ { "cat": { $exists: true } }, { "dog": { $exists: true } } ] } },
+    { $project: {
+        "favFruits": 1,
+        "likesBanana" : {
+            $in: [ "Banana", "$favFruits" ]
+        },
+        "likesApple" : {
+            $in: [ "Maçã", "$favFruits" ]
+        }
+    }},
+    { $match: { $or: [ { "likesBanana": true }, { "likesApple": true } ] } }
+])
+```
 
 ## Exercício 3
