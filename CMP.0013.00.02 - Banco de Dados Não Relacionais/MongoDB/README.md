@@ -3,7 +3,7 @@ FURB - Pós Data Science - Banco de Dados não Relacional - MongoDB
 
 ## Configurações
 
-Subindo container do mongo: `docker run --name mongodb-furb --publish 27017:27017 -d mongo:4.2.5-bionic`.
+Subindo container do mongo: `docker run --name mongodb-furb --publish 27017:27017 -d mongo:4-bionic`.
 
 Acessar o bash do container: `docker exec -it mongodb-furb bash`.
 
@@ -52,7 +52,7 @@ db.pets.insert({name:"Chuck", species: "Gato"})
 
 ## Exercício 2 - Mama mia!
 
-Copiando arquivo para dentro do container do mongo: `docker cp /home/urban/italian-people.js mongodb-furb:/`
+Copiando arquivo para dentro do container do mongo: `docker cp ./italian-people.js mongodb-furb:/`
 
 Acessar o container e importar o arquivo copiado `mongo italian-people.js`.
 
@@ -103,23 +103,50 @@ db.italians.find( { $where: function() {
 `db.italians.find( { "bloodType": /.*-/ }, { "surname": 1, "_id": 0 } )`
 
 ### 11. Projete apenas os animais dos italianos. Devem ser listados os animais com nome e idade. Não mostre o identificado do mongo (ObjectId).
+`db.italians.find( { $or: [ { "dog": { $exists: true } }, { "cat": { $exists: true } } ] }, { "dog.name": 1, "dog.age": 1, "cat.name": 1, "cat.age": 1, "_id": 0 } )`
 
 ### 12. Quais são as 5 pessoas mais velhas com sobrenome Rossi?
+`db.italians.find( { "surname": 'Rossi' }, { "username": 1, "firstname": 1, "age": 1, "_id": 0}).sort( { age: -1} ).limit(5)`
 
 ### 13. Crie um italiano que tenha um leão como animal de estimação. Associe um nome e idade ao bichano.
+`db.italians.insert( { "firstname" : "Quasimodo", "surname" : "Benveniste", "username" : "user99999", "age" : 31, "email" : "Quasimodo.Benveniste@yahoo.com", "bloodType" : "B-", "id_num" : "584715943378", "registerDate" : ISODate("2012-03-25T03:13:49.779Z"), "lion" : { "name" : "Leone", "age" : 5 } } )`
 
 ### 14. Infelizmente o Leão comeu o italiano. Remova essa pessoa usando o Id.
+`db.italians.remove( { "_id": ObjectId("5ea4a4140bc05dddbbe76b5c") }, true)`
 
 ### 15. Passou um ano. Atualize a idade de todos os italianos e dos bichanos em 1.
+`db.italians.updateMany( { }, { $inc: { "age": 1 } } )`
+`db.italians.updateMany( { "cat": { $exists: true } }, { $inc: { "cat.age": 1 } } )`
+`db.italians.updateMany( { "dog": { $exists: true } }, { $inc: { "dog.age": 1 } } )`
 
 ### 16. O Corona Vírus chegou na Itália e misteriosamente atingiu pessoas somente com gatos e de 66 anos. Remova esses italianos.
+`db.italians.remove( { $and: [ { "cat": { $exists: true } }, { "age": 66 } ] } )`
 
 ### 17. Utilizando o framework agregate, liste apenas as pessoas com nomes iguais a sua respectiva mãe e que tenha gato ou cachorro.
+```
+db.italians.aggregate([
+    { $match: { "mother": { $exists: true } } },
+    { $match: { $or: [ {"cat": { $exists: true } }, {"dog": { $exists: true } } ] } },
+    { $project: {
+        "firstname": 1,
+        "mother": 1,
+        "isEqual": { $cmp: [ "$firstname", "$mother.firstname" ] }
+    }},
+    { $match: { "isEqual": 0 } }
+])
+```
 
 ### 18. Utilizando aggregate framework, faça uma lista de nomes única de nomes. Faça isso usando apenas o primeiro nome.
+```
+db.italians.aggregate([
+    { $group: { 
+        "_id": "$firstname" 
+    }}
+])
+```
 
 ### 19. Agora faça a mesma lista do item acima, considerando nome completo.
 
-### 20. rocure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos.
+### 20. Procure pessoas que gosta de Banana ou Maçã, tenham cachorro ou gato, mais de 20 e menos de 60 anos.
 
 ## Exercício 3
