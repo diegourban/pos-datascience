@@ -189,13 +189,6 @@ Acessar o container e importar o arquivo copiado `mongoimport --db stocks --coll
 ### 1. Liste as ações com profit acima de 0.5 (limite a 10 o resultado).
 `db.stocks.find( { "Profit Margin": { $gt: 0.5 } }, { "Ticker": 1, "Profit Margin": 1, "_id": 0} ).limit(10)`
 
-db.stocks.find( { } ).count() -- 6756
-db.stocks.find( { "Profit Margin": { $exists: true } } ).count() --4302
-db.stocks.find( { "Profit Margin": { $lt: 0.5 } } ).count() --4193
-db.stocks.find( { "Profit Margin": { $gt: 0.5 } } ).count() --108
-db.stocks.find( { "Profit Margin": 0.5 } ).count() --1
-
-
 ### 2. Liste as ações com perdas (limite a 10 novamente).
 `db.stocks.find( { "Profit Margin": { $lt: 0 } }, { "Ticker": 1, "Profit Margin": 1, "_id": 0} ).limit(10)`
 
@@ -248,13 +241,15 @@ db.stocks.aggregate([
 ])
 ```
 
-Escolheria as com RSI menor que 30 indicando que o valor da ação está subvalorizado.
-EPS Growth maior que zero e ordenado de forma descendente indicando que a empresa vem aumentando sua rentabilidade.
-Total Debt/Equity ordenado de forme ascendente para indicar a empresa que tem menos risco.
-Dividend Yield ordenado de forma descendente para indicar as empresas que pagam mais dividendos.
-
 ### 9. Liste as ações agrupadas por setor.
+```
+db.stocks.aggregate([
+    { $group: { _id: "$Sector", "tickers": { $push: "$Ticker" } } },
+    { $sort: { "Sector": -1 } }
+])
+```
 
 ### Evidência
+![Comandos Exercício 3](print_comandos_exercicio_3.png)
 
 ## Exercício 4 - raude na Enron!
