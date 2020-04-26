@@ -252,4 +252,17 @@ db.stocks.aggregate([
 ### Evidência
 ![Comandos Exercício 3](print_comandos_exercicio_3.png)
 
-## Exercício 4 - raude na Enron!
+## Exercício 4 - Fraude na Enron!
+
+Copiando arquivo para dentro do container do mongo: `docker cp ./enron.js mongodb-furb:/`.
+
+Acessar o container e importar o arquivo copiado `mongoimport --db enron --collection enron --file enron.json`.
+
+### 1. Liste as pessoas que enviaram e-mails (de forma distinta, ou seja, sem repetir). Quantas pessoas são?
+`db.enron.distinct("sender").length`
+
+### 2. Contabilize quantos e-mails tem a palavra “fraud”.
+`db.enron.find( { "text": { $regex: ".*fraud.*" } } ).count()`
+
+### Evidência
+![Comandos Exercício 4](print_comandos_exercicio_4.png)
