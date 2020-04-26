@@ -52,7 +52,7 @@ db.pets.insert({name:"Chuck", species: "Gato"})
 
 ## Exercício 2 - Mama mia!
 
-Copiando arquivo para dentro do container do mongo: `docker cp ./italian-people.js mongodb-furb:/`
+Copiando arquivo para dentro do container do mongo: `docker cp ./italian-people.js mongodb-furb:/`.
 
 Acessar o container e importar o arquivo copiado `mongo italian-people.js`.
 
@@ -180,4 +180,81 @@ db.italians.aggregate([
 ### Evidência
 ![Comandos Exercício 2](print_comandos_exercicio_2.png)
 
-## Exercício 3
+## Exercício 3 - Stockbrokers
+
+Copiando arquivo para dentro do container do mongo: `docker cp ./stocks.js mongodb-furb:/`.
+
+Acessar o container e importar o arquivo copiado `mongoimport --db stocks --collection stocks --file stocks.json`.
+
+### 1. Liste as ações com profit acima de 0.5 (limite a 10 o resultado).
+`db.stocks.find( { "Profit Margin": { $gt: 0.5 } }, { "Ticker": 1, "Profit Margin": 1, "_id": 0} ).limit(10)`
+
+db.stocks.find( { } ).count() -- 6756
+db.stocks.find( { "Profit Margin": { $exists: true } } ).count() --4302
+db.stocks.find( { "Profit Margin": { $lt: 0.5 } } ).count() --4193
+db.stocks.find( { "Profit Margin": { $gt: 0.5 } } ).count() --108
+db.stocks.find( { "Profit Margin": 0.5 } ).count() --1
+
+
+### 2. Liste as ações com perdas (limite a 10 novamente).
+`db.stocks.find( { "Profit Margin": { $lt: 0 } }, { "Ticker": 1, "Profit Margin": 1, "_id": 0} ).limit(10)`
+
+### 3. Liste as 10 ações mais rentáveis.
+`db.stocks.find( { }, { "Ticker": 1, "Profit Margin": 1, "_id": 0} ).sort( { "Profit Margin": -1} ).limit(10)`
+
+### 4. Qual foi o setor mais rentável?
+```
+db.stocks.aggregate([
+    { $group: { _id: "$Sector", "Sector Profit": { $sum: "$Profit Margin" } } },
+    { $sort: { "Sector Profit": -1 } },
+    { $limit: 1}
+])
+```
+
+### 5. Ordene as ações pelo profit e usando um cursor, liste as ações.
+```
+var cursor = db.stocks.find( { "Profit Margin": { $exists: true}}).sort( { "Profit Margin": -1} )
+cursor.forEach(function(x) {
+    print(x.Ticker);
+});
+```
+
+### 6. Renomeie o campo “Profit Margin” para apenas “profit”.
+`db.stocks.update( { }, { $rename: { "Profit Margin": "profit" } }, { multi: true } )`
+
+### 7. Agora liste apenas a empresa e seu respectivo resultado.
+```
+var cursor = db.stocks.find( { "profit": { $exists: true} } ).sort( { "Profit Margin": -1} )
+cursor.forEach(function(x) {
+    print(x.Company + " = " + x.profit);
+});
+```
+
+### 8. Analise as ações. É uma bola de cristal na sua mão... Quais as três ações você investiria?
+```
+db.stocks.aggregate([
+    { $match: { "Relative Strength Index (14)": { $lt: 30 } } },
+    { $match: { "EPS growth past 5 years": { $gt: 0 } } },
+    { $sort: { "Total Debt/Equity": 1, "Dividend Yield": -1, "EPS growth past 5 years": -1 } },
+    { $limit: 3 },
+    { $project: {
+        "Ticker": 1,
+        "Company": 1,
+        "Relative Strength Index (14)": 1,
+        "Total Debt/Equity": 1,
+        "Dividend Yield": 1,
+        "EPS growth past 5 years": 1
+    }}
+])
+```
+
+Escolheria as com RSI menor que 30 indicando que o valor da ação está subvalorizado.
+EPS Growth maior que zero e ordenado de forma descendente indicando que a empresa vem aumentando sua rentabilidade.
+Total Debt/Equity ordenado de forme ascendente para indicar a empresa que tem menos risco.
+Dividend Yield ordenado de forma descendente para indicar as empresas que pagam mais dividendos.
+
+### 9. Liste as ações agrupadas por setor.
+
+### Evidência
+
+## Exercício 4 - raude na Enron!
