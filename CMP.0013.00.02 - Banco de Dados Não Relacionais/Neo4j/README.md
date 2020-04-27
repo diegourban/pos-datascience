@@ -29,3 +29,26 @@ No editor, executar o comando `:play movie-graph`, navegar para a seguinda pági
 ![Comandos Exercício 1](print_comandos_exercicio_1.png)
 
 ## Exercício 2 - Filtering queries using property values
+
+### 1. Retrieve all movies that were released in a specific year.
+`MATCH (m:Movie {released: 2006}) RETURN m`
+
+### 2. View the retrieved results as a table.
+No painel de resultados, clicar no icone de tabela.
+
+### 3. Query the database for all property keys.
+`CALL db.propertyKeys`
+
+### 4. Retrieve all Movies released in a specific year, returning their titles.
+`MATCH (m:Movie {released: 2003}) RETURN m.title`
+
+### 5. Display title, released, and tagline values for every Movie node in the graph.
+`MATCH (m:Movie) RETURN m.title, m.released, m.tagline`
+
+### 6. Display more user-friendly headers in the table.
+```
+MATCH (m:Movie) RETURN m.title AS `Title`, m.released AS `Released`, m.tagline AS `TagLine`
+```
+
+### Evidência
+![Comandos Exercício 2](print_comandos_exercicio_2.png)
