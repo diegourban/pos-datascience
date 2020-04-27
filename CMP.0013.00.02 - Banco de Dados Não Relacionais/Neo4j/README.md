@@ -52,3 +52,23 @@ MATCH (m:Movie) RETURN m.title AS `Title`, m.released AS `Released`, m.tagline A
 
 ### Evidência
 ![Comandos Exercício 2](print_comandos_exercicio_2.png)
+
+## Exercício 3 - Filtering queries using relationships
+
+### 1. Display the schema of the database.
+`CALL db.schema.visualization()`
+
+### 2. Retrieve all people who wrote the movie Speed Racer.
+`MATCH (p:Person)-[:WROTE]->(:Movie {title: 'Speed Racer'}) RETURN p`
+
+### 3. Retrieve all movies that are connected to the person, Tom Hanks.
+`MATCH (:Person {name: 'Tom Hanks'})--(m:Movie) RETURN m.title`
+
+### 4. Retrieve information about the relationships Tom Hanks had with the set of movies retrieved earlier.
+`MATCH (:Person {name: 'Tom Hanks'})-[rel]-(m:Movie) RETURN m.title, type(rel)`
+
+### 5. Retrieve information about the roles that Tom Hanks acted in.
+`MATCH (:Person {name: 'Tom Hanks'})-[rel:ACTED_IN]-(m:Movie) RETURN m.title, rel.roles`
+
+### Evidência
+![Comandos Exercício 3](print_comandos_exercicio_3.png)
