@@ -17,12 +17,7 @@ No editor, executar o comando `:play movie-graph`, navegar para a seguinda pági
 `MATCH (n) RETURN n`
 
 ### 2. Examine the data model for the graph.
-Informações do modelo de dados:
-- 171 Nodes;
-- 253 Relationships;
-- 2 Labels: Movie e Person;
-- 6 Tipos de Relationships: ACTED_IN, DIRECTED, FOLLOWS, PRODUCED, REVIEWED e WROTE;
-- 14 Properties: born, from, hobby, klout, learn, name, pet, rating, released, roles, since, summary, tagline e title.
+`CALL db.schema.visualization()`
 
 ### 3. Retrieve all Person nodes.
 `MATCH (p:Person) RETURN p`
