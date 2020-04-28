@@ -258,3 +258,53 @@ RETURN m.title as movie, r.name as reviewers
 
 ### Evidência
 ![Comandos Exercício 5](print_comandos_exercicio_5.png)
+
+## Exercício 6 - Controlling results returned
+
+### 1. Execute a query that returns duplicate records.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released >= 1990 AND m.released <= 1999
+RETURN m.released, m.title, collect(p.name)
+```
+
+### 2. Modify the query to eliminate duplication.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released >= 1990 AND m.released <= 1999
+RETURN m.released, collect(m.title), collect(p.name)
+```
+
+### 3. Modify the query to eliminate more duplication.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released >= 1990 AND m.released <= 1999
+RETURN m.released, collect(DISTINCT m.title), collect(p.name)
+```
+
+### 4. Sort results returned.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.released >= 1990 AND m.released <= 1999
+RETURN m.released, collect(DISTINCT m.title), collect(p.name)
+ORDER BY m.released DESC
+```
+
+### 5. Retrieve the top 5 ratings and their associated movies.
+```
+MATCH (:Person)-[r:REVIEWED]->(m:Movie)
+RETURN m.title as movie, r.rating as rating
+ORDER BY r.rating DESC
+LIMIT 5
+```
+
+### 6. Retrieve all actors that have not appeared in more than 3 movies.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WITH p, count(p) as total_movies, collect(m.title) as movies
+WHERE total_movies <= 3
+RETURN p.name as actor, movies
+```
+
+### Evidência
+![Comandos Exercício 6](print_comandos_exercicio_6.png)
