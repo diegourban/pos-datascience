@@ -168,3 +168,93 @@ RETURN m.title, p.name
 
 ### Evidência
 ![Comandos Exercício 4](print_comandos_exercicio_4.png)
+
+## Exercício 5 - Controlling query processing
+
+### 1. Retrieve data using multiple MATCH patterns.
+```
+MATCH (g:Person)-[:ACTED_IN]->(m:Movie)<-[:DIRECTED]-(d:Person), (a:Person)-[:ACTED_IN]->(m)
+WHERE g.name = 'Gene Hackman'
+RETURN m.title as movie, d.name AS Director , a.name AS `Actors`
+```
+
+### 2. Retrieve particular nodes that have a relationship.
+```
+MATCH (jt:Person)-[:FOLLOWS]-(p:Person)
+WHERE jt.name = 'James Thompson'
+RETURN jt, p
+```
+
+### 3. Modify the query to retrieve nodes that are exactly three hops away.
+```
+MATCH (jt:Person)-[:FOLLOWS*3]-(p:Person)
+WHERE jt.name = 'James Thompson'
+RETURN jt, p
+```
+
+### 4. Modify the query to retrieve nodes that are one and two hops away.
+```
+MATCH (jt:Person)-[:FOLLOWS*1..2]-(p:Person)
+WHERE jt.name = 'James Thompson'
+RETURN jt, p
+```
+
+### 5. Modify the query to retrieve particular nodes that areconnected no matter how many hops are required.
+```
+MATCH (jt:Person)-[:FOLLOWS*]-(p:Person)
+WHERE jt.name = 'James Thompson'
+RETURN jt, p
+```
+
+### 6. Specify optional data to be retrieved during the query.
+```
+MATCH (t:Person)
+WHERE t.name STARTS WITH 'Tom'
+OPTIONAL MATCH (t)-[r:DIRECTED]->(m:Movie)
+RETURN t.name, m.title
+```
+
+### 7. Retrieve nodes by collecting a list.
+```
+MATCH (a:Person)-[:ACTED_IN]->(m:Movie)
+RETURN a.name as actor, collect(m.title) as movies
+```
+
+### 8. Retrieve all movies that Tom Cruise has acted in and the co-actors that acted in the same movie by collecting a list
+```
+MATCH (t:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(a:Person)
+WHERE t.name = 'Tom Cruise'
+RETURN m.title as movie, collect(a.name) as co_autors
+```
+
+### 9. Retrieve nodes as lists and return data associated with the corresponding lists.
+```
+MATCH (p:Person)-[:REVIEWED]->(m:Movie)
+RETURN m.title AS movie, count(p) AS total_reviewers, collect(p.name) AS reviewers
+```
+
+### 10. Retrieve nodes and their relationships as lists.
+```
+MATCH (d:Person)-[:DIRECTED]->(:Movie)<-[:ACTED_IN]-(a:Person)
+RETURN d.name AS director, count(a) as total_actors, collect(a.name) as actors
+```
+
+### 11. Retrieve the actors who have acted in exactly five movies.
+```
+MATCH (a:Person)-[:ACTED_IN]->(m:Movie)
+WITH a, count(a) as total_movies, collect(m.title) as movies
+WHERE total_movies = 5
+RETURN a.name as actor, movies
+```
+
+### 12. Retrieve the movies that have at least 2 directors with other optional data.
+```
+MATCH (m:Movie)
+WITH m, size((:Person)-[:DIRECTED]->(m)) as total_directors
+WHERE total_directors >= 2
+OPTIONAL MATCH (r:Person)-[:REVIEWED]->(m)
+RETURN m.title as movie, r.name as reviewers
+```
+
+### Evidência
+![Comandos Exercício 5](print_comandos_exercicio_5.png)
