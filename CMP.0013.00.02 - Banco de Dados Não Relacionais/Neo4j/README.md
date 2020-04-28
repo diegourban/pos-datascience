@@ -72,3 +72,99 @@ MATCH (m:Movie) RETURN m.title AS `Title`, m.released AS `Released`, m.tagline A
 
 ### Evidência
 ![Comandos Exercício 3](print_comandos_exercicio_3.png)
+
+## Exercício 4 - Filtering queries using WHERE clause
+
+### 1. Retrieve all movies that Tom Cruise acted in.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE p.name = 'Tom Cruise'
+RETURN m.title
+```
+
+### 2. Retrieve all people that were born in the 70’s.
+```
+MATCH (p:Person)
+WHERE p.born >= 1970 AND p.born <= 1979
+RETURN p.name
+```
+
+### 3. Retrieve the actors who acted in the movie The Matrix who were born after 1960.
+```
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE m.title = 'The Matrix' AND p.born > 1960
+RETURN p.name
+```
+
+### 4. Retrieve all movies by testing the node label and a property.
+```
+MATCH (m)
+WHERE m:Movie AND m.released = 2003
+RETURN m.title
+```
+
+### 5. Retrieve all people that wrote movies by testing the relationship between two nodes.
+```
+MATCH (p)-[r]->(m)
+WHERE p:Person AND type(r) = 'WROTE' AND m:Movie
+RETURN p.name
+```
+
+### 6. Retrieve all people in the graph that do not have a property.
+```
+MATCH (p:Person)
+WHERE NOT exists(p.born)
+RETURN p.name
+```
+
+### 7. Retrieve all people related to movies where the relationship has a property.
+```
+MATCH (p:Person)-[r]->(m:Movie)
+WHERE exists(r.rating)
+RETURN p.name, m.title, r.rating
+```
+
+### 8. Retrieve all actors whose name begins with James.
+```
+MATCH (p:Person)-[r]->(:Movie)
+WHERE type(r) = 'ACTED_IN' AND p.name STARTS WITH 'James'
+RETURN p.name
+```
+
+### 9. Retrieve all REVIEW relationships from the graph with filtered results.
+```
+MATCH (:Person)-[r]->(m:Movie)
+WHERE type(r) = 'REVIEWED' AND toLower(r.summary) CONTAINS 'fun'
+RETURN m.title, r.summary
+```
+
+### 10. Retrieve all people who have produced a movie, but have not directed a movie.
+```
+MATCH (p:Person)-[:PRODUCED]->(m:Movie)
+WHERE NOT ((p)-[:DIRECTED]->(:Movie))
+RETURN p.name, m.title
+```
+
+### 11. Retrieve the movies and their actors where one of the actors also directed the movie.
+```
+MATCH (p1:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p2:Person)
+WHERE exists((p2)-[:DIRECTED]->(m))
+RETURN m.title, p1.name AS `Actor`, p2.name AS `Director`
+```
+
+### 12. Retrieve all movies that were released in a set of years.
+```
+MATCH (m:Movie)
+WHERE m.released in [2000, 2004, 2008]
+RETURN m.title, m.released
+```
+
+### 13. Retrieve the movies that have an actor’s role that is the name of the movie.
+```
+MATCH (p:Person)-[r:ACTED_IN]->(m:Movie)
+WHERE m.title in r.roles
+RETURN m.title, p.name
+```
+
+### Evidência
+![Comandos Exercício 4](print_comandos_exercicio_4.png)
