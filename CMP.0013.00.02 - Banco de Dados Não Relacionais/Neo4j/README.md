@@ -308,3 +308,40 @@ RETURN p.name as actor, movies
 
 ### Evidência
 ![Comandos Exercício 6](print_comandos_exercicio_6.png)
+
+## Exercício 7 - Working with cypher data
+
+### 1. Collect and use lists.
+```
+MATCH (a:Person)-[:ACTED_IN]->(m:Movie)<-[:PRODUCED]-(p:Person)
+WITH m, collect(DISTINCT a.name) as actors, collect(DISTINCT p.name) as producers
+RETURN DISTINCT m.title as movie, actors, producers
+ORDER BY size(actors)
+```
+
+### 2. Collect a list.
+```
+MATCH (a:Person)-[:ACTED_IN]->(m:Movie)
+WITH a, collect(m.title) as movies
+WHERE size(movies) > 5
+RETURN a.name as actor, movies
+```
+
+### 3. Unwind a list.
+```
+MATCH (a:Person)-[:ACTED_IN]->(m:Movie)
+WITH a, collect(m) as movies
+WHERE size(movies) > 5
+WITH a, movies UNWIND movies AS movie
+RETURN a.name as actor, movie.title
+```
+
+### 4. Perform a calculation with the date type.
+```
+MATCH (a:Person)-[r:ACTED_IN]->(m:Movie)
+WHERE a.name = 'Tom Hanks'
+RETURN m.title as movie, m.released as year_released, date().year - m.released as years_ago_released, m.released - a.born as age_of_tom
+```
+
+### Evidência
+![Comandos Exercício 7](print_comandos_exercicio_7.png)
