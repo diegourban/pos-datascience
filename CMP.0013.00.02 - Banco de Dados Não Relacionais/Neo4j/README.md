@@ -557,3 +557,48 @@ return p, rel, m
 
 ### Evidência
 ![Comandos Exercício 9](print_comandos_exercicio_9.png)
+
+## Exercício 10 - Deleting nodes and relationships
+
+### 1. Delete a relationship.
+```
+MATCH (:Person)-[rel:HELPED]-(:Person)
+DELETE rel
+```
+
+### 2. Confirm that the relationship has been deleted.
+```
+MATCH (:Person)-[rel:HELPED]-(:Person)
+RETURN rel
+```
+
+### 3. Retrieve a movie and all of its relationships.
+```
+MATCH (p:Person)-[rel]-(m:Movie)
+WHERE m.title = 'Forrest Gump'
+RETURN p, rel, m
+```
+
+### 4. Try deleting a node without detaching its relationships.
+```
+MATCH (m:Movie)
+WHERE m.title = 'Forrest Gump'
+DELETE m
+```
+
+### 5. Delete a Movie node, along with its relationships.
+```
+MATCH (m:Movie)
+WHERE m.title = 'Forrest Gump'
+DETACH DELETE m
+```
+
+### 6. Confirm that the Movie node has been deleted.
+```
+MATCH (p:Person)-[rel]-(m:Movie)
+WHERE m.title = 'Forrest Gump'
+RETURN p, rel, m
+```
+
+### Evidência
+![Comandos Exercício 10](print_comandos_exercicio_10.png)
