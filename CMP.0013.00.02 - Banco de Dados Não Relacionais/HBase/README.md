@@ -24,6 +24,9 @@ Copiar o arquivo para o container: `docker cp italians.txt hbase-furb:/tmp`.
 put 'italians', '11', 'personal-data:name',  'Quasimodo Benveniste'
 put 'italians', '11', 'personal-data:birth_date',  '1988-10-25'
 put 'italians', '11', 'professional-data:years_exp',  '10'
+put 'italians', '12', 'personal-data:name',  'Eterie Paradiso'
+put 'italians', '12', 'personal-data:birth_date',  '2020-04-29'
+put 'italians', '12', 'professional-data:years_exp',  '0'
 ```
 
 ### 2.2. Adicione o controle de 5 versões na tabela de dados pessoais.
