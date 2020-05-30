@@ -126,9 +126,9 @@ boxplot(df$salario ~ df$idade)
 media_mulher <- mean(df_mulheres$salario)
 dp_mulher <- sd(df_mulheres$salario)
 
-q3 <- quantile(dados$salario, probs=0.75)
+q3 <- quantile(df$salario, probs=0.75)
 
-# Probabilidade de uma mulher receber mais queo Q3
+# Probabilidade de uma mulher receber mais que o Q3
 # P(Sal > Q3) = 1 - P(Sal <= Q3)
 1 - pnorm(q3, mean = media_mulher, sd = dp_mulher)
 # Aproximadamente 15%
@@ -137,8 +137,18 @@ q3 <- quantile(dados$salario, probs=0.75)
 media_homem <- mean(df_homens$salario)
 dp_homem <- sd(df_homens$salario)
 
-q3 <- quantile(dados$salario, probs=0.75)
+q3 <- quantile(df$salario, probs=0.75)
 1 - pnorm(q3, mean = media_homem, sd = dp_homem)
 # Aproximadamente 31%
 
 # Questão 12: Considerando a distribuição normal, com a média e o desvio-padrão dos casados, quais as chances do nível de stress de um destes respondentes ser menor do que 50 (metade da escala).
+media_casados <- mean(df_casados$stress)
+dp_casados <- sd(df_casados$stress)
+
+q2 = quantile(df$stress, probs=0.50)
+
+# Probabilidade de uma mulher receber mais que o Q3
+# P(Sal > Q3) = 1 - P(Sal <= Q3)
+# P(Stress < Q2)
+pnorm(q2, mean = media_casados, sd = dp_casados)
+# Aproximadamente 32%
