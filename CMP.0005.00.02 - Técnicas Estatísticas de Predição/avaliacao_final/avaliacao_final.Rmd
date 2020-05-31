@@ -1,0 +1,112 @@
+---
+title: "CMP.0005.00.02 - Técnicas Estatísticas de Predição - Avaliação Final"
+author: "Diego Leonardo Urban"
+output: 
+  html_notebook: default
+---
+```{r echo=FALSE}
+# Carregando a biblioteca fBasics
+library(fBasics)
+```
+# Cenário
+
+Este documento contém a análise dos dados de um levantamento feito com 1289 pessoas dos Estados Unidos da América.
+
+Os dados estão organizados com as seguintes variáveis:
+
+| Rótulo      | O que mede                                                                       |
+|-------------|----------------------------------------------------------------------------------|
+| obs         | Rótulo das Observações.                                                          |
+| salario     | Salário dos indivíduos entrevistados – em milhares de reais por ano.             |
+| sexo        | Se for do sexo feminino recebe valor 1, se for do seco masculino recebe valor 0. |
+| cor         | Recebe 1 se a pessoa for não-branca, 0 caso contrário.                           |
+| est_civil   | Recebe 1 caso a pessoa for casada, 0 caso contrário.                             |
+| instrucao   | Anos de educação formal que a pessoa recebeu.                                    |
+| experiencia | Anos de experiência que a possui na área em que trabalha.                        |
+| idade       | Anos de vida que a pessoa entrevistada possui.                                   |
+
+```{r echo=FALSE}
+# Carregando os dados
+df <- read.csv("Dados.csv", header = T, sep = ";", dec = ",");
+```
+
+## Questão 1
+Calcule as medidas de posição (Média, Mediana, Máximo, Mínimo, 1o Quartil e 3o quartil) para as variáveis “salario”, “instrucao", “experiência" e “idade”. Apresente os cálculos e faça uma interpretação dos resultados.
+
+### Salário
+```{r echo=FALSE}
+summary(df$salario)
+```
+
+### Instrução
+```{r echo=FALSE}
+summary(df$instrucao)
+```
+
+### Experiência
+```{r echo=FALSE}
+summary(df$experiencia)
+```
+
+### Idade
+```{r echo=FALSE}
+summary(df$idade)
+```
+
+O salário aparenta ter uma assimetria a direita pois o primeiro quartil, média, mediana e terceiro quartil estão entre R$ 6.000 e R$ 16.000 por ano, sendo que o salario máximo é de R$ 63.000 por ano.
+
+Há pessoas sem instrução e com no máximo 20 anos de instrução. Média e Mediana entre 12 e 13 anos.
+
+Há pessoas sem experiência e com no máximo 56 anos de experiência. Média e Mediana entre 18 e 19 anos. Aparenta ter assimetria a direita.
+
+Com idade mínima de 18 e máxima de 65 anos. Média e Mediana entre 37 e 38 anos. Aparenta ser uma distribuição normal.
+
+## Questão 2
+Calcule as medidas de dispersão (Amplitude, Desvio-Padrão, Variância, Coeficiente de Variação, Assimetria e Curtose) para as variáveis “salario”, “instrucao", “experiência" e “idade”.
+
+### Salário
+```{r echo=FALSE}
+cat("Amplitude = ", max(df$salario)-min(df$salario), "\n")
+cat("Desvio Padrão = ", sd(df$salario), "\n")
+cat("Variância = ", var(df$salario), "\n")
+cat("Coeficiente de Variação = ", sd(df$salario) / mean(df$salario), "\n")
+cat("Assimetria = ", skewness(df$salario), "\n")
+cat("Curtose = ", kurtosis(df$salario), "\n")
+```
+
+### Instrução
+```{r echo=FALSE}
+cat("Amplitude = ", max(df$instrucao)-min(df$instrucao), "\n")
+cat("Desvio Padrão = ", sd(df$instrucao), "\n")
+cat("Variância = ", var(df$instrucao), "\n")
+cat("Coeficiente de Variação = ", sd(df$instrucao) / mean(df$instrucao), "\n")
+cat("Assimetria = ", skewness(df$instrucao), "\n")
+cat("Curtose = ", kurtosis(df$instrucao), "\n")
+```
+
+### Experiência
+```{r echo=FALSE}
+cat("Amplitude = ", max(df$experiencia)-min(df$experiencia), "\n")
+cat("Desvio Padrão = ", sd(df$experiencia), "\n")
+cat("Variância = ", var(df$experiencia), "\n")
+cat("Coeficiente de Variação = ", sd(df$experiencia) / mean(df$experiencia), "\n")
+cat("Assimetria = ", skewness(df$experiencia), "\n")
+cat("Curtose = ", kurtosis(df$experiencia), "\n")
+```
+
+### Idade
+```{r echo=FALSE}
+cat("Amplitude = ", max(df$idade)-min(df$idade), "\n")
+cat("Desvio Padrão = ", sd(df$idade), "\n")
+cat("Variância = ", var(df$idade), "\n")
+cat("Coeficiente de Variação = ", sd(df$idade) / mean(df$idade), "\n")
+cat("Assimetria = ", skewness(df$idade), "\n")
+cat("Curtose = ", kurtosis(df$idade), "\n")
+```
+
+#### Com relação ao Coeficiente de Variação, qual é a variável que possui maior discrepância em seus valores? E a com menor discrepância?
+A variável Instrução possui menor discrepância com 0.2140592 enquanto que a variável de maior discrepância é o Salário com 0.6385611.
+
+#### Qual deve ser a interpretação dada ao Coeficiente de Variação?
+
+#### Considerando que as medidas de Assimetria e Curtose qualificam a média como boa medida de tendência central, existe alguma das variáveis que possua problemas de assimetria e/ou curtose? Justifique.
