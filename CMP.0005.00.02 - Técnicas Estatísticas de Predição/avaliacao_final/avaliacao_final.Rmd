@@ -108,5 +108,7 @@ cat("Curtose = ", kurtosis(df$idade), "\n")
 A variável Instrução possui menor discrepância com 0.2140592 enquanto que a variável de maior discrepância é o Salário com 0.6385611.
 
 #### Qual deve ser a interpretação dada ao Coeficiente de Variação?
+Quanto menor o Coeficiente de Variação mais homogêneo é o conjunto de dados.
 
 #### Considerando que as medidas de Assimetria e Curtose qualificam a média como boa medida de tendência central, existe alguma das variáveis que possua problemas de assimetria e/ou curtose? Justifique.
+As variáveis Experiência e Idade aparentam ter medidas de assimetria e curtose mais leves enquanto que o Salário e Instrução aparentam serem mais acentuadas.
