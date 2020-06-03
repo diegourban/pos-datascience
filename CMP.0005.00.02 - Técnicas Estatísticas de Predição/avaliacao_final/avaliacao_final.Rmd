@@ -112,3 +112,44 @@ Quanto menor o Coeficiente de Variação mais homogêneo é o conjunto de dados.
 
 #### Considerando que as medidas de Assimetria e Curtose qualificam a média como boa medida de tendência central, existe alguma das variáveis que possua problemas de assimetria e/ou curtose? Justifique.
 As variáveis Experiência e Idade aparentam ter medidas de assimetria e curtose mais leves enquanto que o Salário e Instrução aparentam serem mais acentuadas.
+
+## Questão 3
+Considere uma análise que possa ser realizada sobre a variável salario. Faça os procedimentos destacados a seguir:
+
+### Calcule a média e a mediana do “salario” para mulheres e homens separadamente. Qual é a tendência apresentada para média e para mediana?
+```{r echo=FALSE}
+df_homens <- subset(df, (sexo == 0))
+df_mulheres <- subset(df, (sexo == 1))
+
+media_salario_homens <- mean(df_homens$salario)
+mediana_salario_homens <- median(df_homens$salario)
+cat("Média do Salário dos Homens = ", media_salario_homens, "\n")
+cat("Mediana do Salário dos Homens = ", mediana_salario_homens, "\n\n")
+
+media_salario_mulheres <- mean(df_mulheres$salario)
+mediana_salario_mulheres <- median(df_mulheres$salario)
+cat("Média do Salário das Mulheres = ", media_salario_mulheres, "\n")
+cat("Mediana do Salário das Mulheres = ", mediana_salario_mulheres, "\n")
+```
+
+Há uma tendência de homens ganharem mais do que mulheres.
+
+### Calcule a média do “salario” para brancos e não brancos. Qual é a tendência apresentada para média e para mediana?
+
+```{r echo=FALSE}
+df_brancos <- subset(df, (cor == 0))
+df_nao_brancos <- subset(df, (cor == 1))
+
+media_salario_brancos <- mean(df_brancos$salario)
+mediana_salario_brancos <- median(df_brancos$salario)
+cat("Média do Salário de Brancos = ", media_salario_brancos, "\n")
+cat("Mediana do Salário de Brancos = ", mediana_salario_brancos, "\n\n")
+
+media_salario_nao_brancos <- mean(df_nao_brancos$salario)
+mediana_salario_nao_brancos <- median(df_nao_brancos$salario)
+cat("Média do Salário de Não Brancos = ", media_salario_nao_brancos, "\n")
+cat("Mediana do Salário de Não Brancos = ", mediana_salario_nao_brancos, "\n")
+```
+
+Há uma tendência de pessoas Brancas em média, ganharem mais do que pessoas Não Brancas.
+
