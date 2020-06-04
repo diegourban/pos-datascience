@@ -243,4 +243,3 @@ hist(idade,
 ```
 
 A variável Idade aparenta ser a variável com melhor ajuste para a distribuição normal.
-
