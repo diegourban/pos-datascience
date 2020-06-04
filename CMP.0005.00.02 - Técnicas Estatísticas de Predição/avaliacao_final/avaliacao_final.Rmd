@@ -153,3 +153,15 @@ cat("Mediana do Salário de Não Brancos = ", mediana_salario_nao_brancos, "\n")
 
 Há uma tendência de pessoas Brancas em média, ganharem mais do que pessoas Não Brancas.
 
+## Questão 4
+Faça um gráfico Box-Plot para as variáveis salario, instrucao, experiencia e idade e identifique se existem outliers. Quantas observações deveriam ser excluídas em cada variável por serem prováveis outliers?
+
+```{r echo=FALSE}
+boxplot(df$salario, ylab="Salário (em milhares por ano)", main="Distribuição do Salário dos entrevistados")
+boxplot(df$instrucao, ylab="Instrução (em anos)", main="Distribuição da Instrução dos entrevistados")
+boxplot(df$experiencia, ylab="Experiência (em anos)", main="Distribuição da Experiência dos entrevistados")
+boxplot(df$idade, ylab="Idade", main="Distribuição da Idade dos entrevistados")
+```
+
+A variável Idade não apresenta outliers. Experiência e Instrução tem 1 e 3 outliers respectivamente, enquanto que Salário há dezenas de outliers.
+
