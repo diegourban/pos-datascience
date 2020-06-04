@@ -217,5 +217,30 @@ abline(v=mean(instrucao), col="green")
 
 Há uma tendência de que entrevistados com mais anos de experiência tem menos anos de instrução.
 
+## Questão 6
+Considerando as variáveis estritamente quantitativas. Construa um Histograma e identifique a variável com melhor ajuste percebido para a distribuição normal de probabilidade.
 
+```{r echo=FALSE}
+hist(salario,
+     main="Histograma do Salário dos entrevistados",
+     xlab="Salário (em milhares por ano)",
+     ylab="Frequência")
+
+hist(instrucao,
+     main="Histograma da Instrução dos entrevistados",
+     xlab="Instrução (em anos)",
+     ylab="Frequência")
+
+hist(experiencia,
+     main="Histograma da Experiência dos entrevistados",
+     xlab="Experiência (em anos)",
+     ylab="Frequência")
+
+hist(idade,
+     main="Histograma da Idade dos entrevistados",
+     xlab="Idade",
+     ylab="Frequência")
+```
+
+A variável Idade aparenta ser a variável com melhor ajuste para a distribuição normal.
 
