@@ -1,0 +1,7 @@
+name: redinsgo
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - redis-py=3.0.1
+
