@@ -1,11 +1,13 @@
 ---
-title: "CMP.0005.00.02 - Técnicas Estatísticas de Predição - Avaliação Final"
+title: "CMP.5.0.2 - Técnicas Estatísticas de Predição - Avaliação Final"
 author: "Diego Leonardo Urban"
-date: "04 de Junho de 2020"
-output: 
+date: "09 de Junho de 2020"
+output:
+  pdf_document: default
+  word_document: default
   html_notebook: default
 ---
-```{r echo=FALSE}
+```{r}
 # Carregando a biblioteca fBasics
 library(fBasics)
 ```
@@ -26,7 +28,7 @@ Os dados estão organizados com as seguintes variáveis:
 | experiencia | Anos de experiência que a possui na área em que trabalha.                        |
 | idade       | Anos de vida que a pessoa entrevistada possui.                                   |
 
-```{r echo=FALSE}
+```{r}
 # Carregando os dados
 df <- read.csv("Dados.csv", header = T, sep = ";", dec = ",");
 ```
@@ -35,22 +37,22 @@ df <- read.csv("Dados.csv", header = T, sep = ";", dec = ",");
 Calcule as medidas de posição (Média, Mediana, Máximo, Mínimo, 1o Quartil e 3o quartil) para as variáveis “salario”, “instrucao", “experiência" e “idade”. Apresente os cálculos e faça uma interpretação dos resultados.
 
 #### Salário
-```{r echo=FALSE}
+```{r}
 summary(df$salario)
 ```
 
 #### Instrução
-```{r echo=FALSE}
+```{r}
 summary(df$instrucao)
 ```
 
 #### Experiência
-```{r echo=FALSE}
+```{r}
 summary(df$experiencia)
 ```
 
 #### Idade
-```{r echo=FALSE}
+```{r}
 summary(df$idade)
 ```
 
@@ -60,13 +62,13 @@ Há pessoas sem instrução e com no máximo 20 anos de instrução. Média e Me
 
 Há pessoas sem experiência e com no máximo 56 anos de experiência. Média e Mediana entre 18 e 19 anos. Aparenta ter assimetria a direita.
 
-Com idade mínima de 18 e máxima de 65 anos. Média e Mediana entre 37 e 38 anos. Aparenta ser uma distribuição normal.
+A variável Idade tem idade mínima de 18 e máxima de 65 anos. Média e Mediana entre 37 e 38 anos. Aparenta ser uma distribuição normal.
 
 ## Questão 2
 Calcule as medidas de dispersão (Amplitude, Desvio-Padrão, Variância, Coeficiente de Variação, Assimetria e Curtose) para as variáveis “salario”, “instrucao", “experiência" e “idade”.
 
 #### Salário
-```{r echo=FALSE}
+```{r}
 cat("Amplitude =", max(df$salario)-min(df$salario), "\n")
 cat("Desvio Padrão =", sd(df$salario), "\n")
 cat("Variância =", var(df$salario), "\n")
@@ -76,7 +78,7 @@ cat("Curtose =", kurtosis(df$salario), "\n")
 ```
 
 #### Instrução
-```{r echo=FALSE}
+```{r}
 cat("Amplitude =", max(df$instrucao)-min(df$instrucao), "\n")
 cat("Desvio Padrão =", sd(df$instrucao), "\n")
 cat("Variância =", var(df$instrucao), "\n")
@@ -86,7 +88,7 @@ cat("Curtose =", kurtosis(df$instrucao), "\n")
 ```
 
 #### Experiência
-```{r echo=FALSE}
+```{r}
 cat("Amplitude =", max(df$experiencia)-min(df$experiencia), "\n")
 cat("Desvio Padrão =", sd(df$experiencia), "\n")
 cat("Variância =", var(df$experiencia), "\n")
@@ -96,7 +98,7 @@ cat("Curtose =", kurtosis(df$experiencia), "\n")
 ```
 
 #### Idade
-```{r echo=FALSE}
+```{r}
 cat("Amplitude =", max(df$idade)-min(df$idade), "\n")
 cat("Desvio Padrão =", sd(df$idade), "\n")
 cat("Variância =", var(df$idade), "\n")
@@ -118,7 +120,7 @@ As variáveis Experiência e Idade aparentam ter medidas de assimetria e curtose
 Considere uma análise que possa ser realizada sobre a variável salario. Faça os procedimentos destacados a seguir:
 
 #### 3.1 Calcule a média e a mediana do “salario” para mulheres e homens separadamente. Qual é a tendência apresentada para média e para mediana?
-```{r echo=FALSE}
+```{r}
 df_homens <- subset(df, (sexo == 0))
 df_mulheres <- subset(df, (sexo == 1))
 
@@ -137,7 +139,7 @@ Há uma tendência de homens ganharem mais do que mulheres.
 
 #### 3.2 Calcule a média do “salario” para brancos e não brancos. Qual é a tendência apresentada para média e para mediana?
 
-```{r echo=FALSE}
+```{r}
 df_brancos <- subset(df, (cor == 0))
 df_nao_brancos <- subset(df, (cor == 1))
 
@@ -157,7 +159,7 @@ Há uma tendência de pessoas Brancas em média, ganharem mais do que pessoas N�
 ## Questão 4
 Faça um gráfico Box-Plot para as variáveis salario, instrucao, experiencia e idade e identifique se existem outliers. Quantas observações deveriam ser excluídas em cada variável por serem prováveis outliers?
 
-```{r echo=FALSE}
+```{r}
 boxplot(df$salario, ylab="Salário (em milhares por ano)", main="Distribuição do Salário dos entrevistados")
 boxplot(df$instrucao, ylab="Instrução (em anos)", main="Distribuição da Instrução dos entrevistados")
 boxplot(df$experiencia, ylab="Experiência (em anos)", main="Distribuição da Experiência dos entrevistados")
@@ -169,7 +171,7 @@ A variável Idade não apresenta outliers. Experiência e Instrução tem 1 e 3 
 ## Questão 5
 Considerando os gráficos de dispersão, construa-os conforme pedido a seguir:
 
-```{r echo=FALSE}
+```{r}
 salario <- df$salario
 instrucao <- df$instrucao
 experiencia <- df$experiencia
@@ -177,7 +179,7 @@ idade <- df$idade
 ```
 
 #### 5.1 Faça um gráfico que relacione o “salario” com o tempo de “instrucao”. Analise uma eventual tendência dos dados.
-```{r echo=FALSE}
+```{r}
 plot(salario~instrucao, xlab="Salário (em milhares por ano)", ylab="Instrução (em anos)", main="Salário X Instrução")
 model <- lm(salario~instrucao)    
 abline(model, col="red")
@@ -187,7 +189,7 @@ abline(v=mean(instrucao), col="green")
 Há uma tendência de que quanto mais anos de instrução o entrevistado tem, maior é o seu salário.
 
 #### 5.2 Faça um gráfico que relacione o “salario” com o tempo de “experiência". Analise uma eventual tendência dos dados.
-```{r echo=FALSE}
+```{r}
 plot(salario~experiencia, xlab="Salário (em milhares por ano)", ylab="Experiência (em anos)", main="Salário X Experiência")
 model <- lm(salario~experiencia)    
 abline(model, col="red")
@@ -197,7 +199,7 @@ abline(v=mean(experiencia), col="green")
 Há uma leve tendência de que quanto mais anos de experiência o entrevistado tem, maior é o seu salário.
 
 #### 5.3 Faça um gráfico que relacione o “salario” com a “idade”. Analise uma eventual tendência dos dados.
-```{r echo=FALSE}
+```{r}
 plot(salario~idade, xlab="Salário (em milhares por ano)", ylab="Idade", main="Salário X Idade")
 model <- lm(salario~idade)    
 abline(model, col="red")
@@ -208,7 +210,7 @@ abline(v=mean(idade), col="green")
 Há uma leve tendência de que quanto maior a indade do entrevistado, maior é o seu salário.
 
 #### 5.4 Faça um gráfico que relacione a “experiencia" com o tempo de “instrucao". Analise uma eventual tendência dos dados.
-```{r echo=FALSE}
+```{r}
 plot(experiencia~instrucao, xlab="Experiência (em anos)", ylab="Instrução (em anos)", main="Experiência X Instrução")
 model <- lm(experiencia~instrucao)    
 abline(model, col="red")
@@ -221,7 +223,7 @@ Há uma tendência de que entrevistados com mais anos de experiência tem menos 
 ## Questão 6
 Considerando as variáveis estritamente quantitativas. Construa um Histograma e identifique a variável com melhor ajuste percebido para a distribuição normal de probabilidade.
 
-```{r echo=FALSE}
+```{r}
 hist(salario,
      main="Histograma do Salário dos entrevistados",
      xlab="Salário (em milhares por ano)",
@@ -249,7 +251,7 @@ A variável Idade aparenta ser a variável com melhor ajuste para a distribuiç�
 Considere que a variável “salario” segue uma distribuição normal de probabilidade. A média e o desvio-padrão já foram calculados. Assim determine o que se pede:
 
 #### 7.1 Qual a probabilidade estimada de uma pessoa ganhar mais do que o 3o quartil?
-```{r echo=FALSE}
+```{r}
 media_salario <- mean(df$salario)
 mediana_salario <- median(df$salario)
 dp_salario <- sd(df$salario)
@@ -260,14 +262,14 @@ cat("Probabilidade estimada de uma pessoa ganhar mais do que o 3º quartil =", p
 ```
 
 #### 7.2 Qual a probabilidade estimada de uma pessoa ganhar menos do que o 1o quartil?
-```{r echo=FALSE}
+```{r}
 q1 <- quantile(df$salario, probs=0.25)
 prob_salario_menor_q1 <- pnorm(q1, mean = media_salario, sd = dp_salario)
 cat("Probabilidade estimada de uma pessoa ganhar menos do que o 1º quartil =", prob_salario_menor_q1, "\n")
 ```
 
 #### 7.3 O que é mais provável, considerando a probabilidade estimada, a pessoa ganhar menos do que a média ou a pessoa ganhar menos do que a mediana?
-```{r echo=FALSE}
+```{r}
 prob_salario_menor_media <- pnorm(media_salario, mean = media_salario, sd = dp_salario)
 prob_salario_menor_mediana <- pnorm(mediana_salario, mean = media_salario, sd = dp_salario)
 
