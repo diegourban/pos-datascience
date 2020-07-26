@@ -1,0 +1,406 @@
+---
+title: "CMP.6.0.2 - Inferência Estatística e Modelo de Previsão - Avaliação Final"
+author: "Diego Leonardo Urban"
+date: "26/07/2020"
+output:
+  html_notebook: default
+---
+
+```{r}
+# Carregando a biblioteca fBasics
+library(fBasics)
+library(car) # Teste de Levene
+library(normtest) #Testes de Normalidade
+```
+# Cenário
+
+Este documento contém a análise dos dados de um levantamento feito com 1289 pessoas dos Estados Unidos da América.
+
+Os dados estão organizados com as seguintes variáveis:
+
+| Rótulo      | O que mede                                                                       |
+|-------------|----------------------------------------------------------------------------------|
+| obs         | Rótulo das Observações.                                                          |
+| salario     | Salário dos indivíduos entrevistados – em milhares de reais por ano.             |
+| sexo        | Se for do sexo feminino recebe valor 1, se for do seco masculino recebe valor 0. |
+| cor         | Recebe 1 se a pessoa for não-branca, 0 caso contrário.                           |
+| est_civil   | Recebe 1 caso a pessoa for casada, 0 caso contrário.                             |
+| instrucao   | Anos de educação formal que a pessoa recebeu.                                    |
+| experiencia | Anos de experiência que a possui na área em que trabalha.                        |
+| idade       | Anos de vida que a pessoa entrevistada possui.                                   |
+
+```{r}
+# Carregando os dados
+df <- read.csv("Dados.csv", header = T, sep = ";", dec = ",");
+```
+
+# Questão 1
+Considerando os dados apresentados acima, construa os testes de hipótese dadas as questões apresentadas. Elaborar: (i) A hipótese nula e a alternativa a ser testada; (ii) Destaque o teste que será realizado; (iii) Descreva os pressupostos necessários para cada teste; (iv) Efetue o teste de hipótese pretendido, e (v) Conclua sobre quais os indícios trazidos pelos dados.
+
+## O Salário médio dos homens se difere do salário médio das mulheres?
+```{r}
+summary(df$salario)
+summary(df$salario[df$sexo==0]) #Salário Homens
+summary(df$salario[df$sexo==1]) #Salário Mulheres
+
+basicStats(df$salario)
+basicStats(df$salario[df$sexo==0]) #Salário Homens
+basicStats(df$salario[df$sexo==1]) #Salário Mulheres
+```
+
+### Pressupostos
+#### Normalidade
+H0: os dados seguem uma distribuição normal
+
+H1: os dados não seguem uma distribuição normal
+```{r}
+shapiro.test(df$salario[df$sexo==0]) #Salário Homens
+shapiro.test(df$salario[df$sexo==1]) #Salário Mulheres
+```
+Conclusão: Para ambos os grupos, as distribuições não são normais, p-value < 0.05, portanto rejeitamos H0 e Aceitamos H1.
+
+#### Homodedasticidade - Levene
+H0: as variâncias são iguais
+
+H1: as variâncias são diferentes
+```{r}
+leveneTest(df$salario, df$sexo)
+```
+Conclusão: As variâncias dos grupos são diferentes, Pr(>F) (p-value) = 5.737e-06 < 0.05, rejeitamos H0 e aceitamos H1.
+
+#### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$salario~df$sexo, var.equal=T)
+```
+Conclusão: Como p-value = 4.98e-16 < 0.05, rejeitamos H0 e aceitamos H1.
+Logo: A média de salário entre homens e mulheres é diferente e em média os homens possuem maior sálário que as mulheres.
+
+
+## O Salário médio das pessoas não brancas se difere das pessoas brancas?
+```{r}
+summary(df$salario)
+summary(df$salario[df$cor==0]) #Salário Brancos
+summary(df$salario[df$cor==1]) #Salário Não-Brancos
+
+basicStats(df$salario)
+basicStats(df$salario[df$cor==0]) #Salário Brancos
+basicStats(df$salario[df$cor==1]) #Salário Não-Brancos
+```
+
+#### Pressupostos
+##### Normalidade
+H0: os dados seguem uma distribuição normal.
+
+H1: os dados não seguem uma distribuição normal.
+```{r}
+shapiro.test(df$salario[df$cor==0]) #Salário Brancos
+shapiro.test(df$salario[df$cor==1]) #Salário Não-Brancos
+```
+Conclusão: Para ambos os grupos, as distribuições não são normais, p-value < 0.05, portanto rejeitamos H0 e aceitamos H1.
+
+##### Homodedasticidade - Levene
+H0: as variâncias são iguais.
+
+H1: as variâncias são diferentes.
+```{r}
+leveneTest(df$salario, df$cor)
+```
+Conclusão: As variâncias dos grupos são diferentes, Pr(>F) (p-value) = 0.0004716 < 0.05, rejeitamos H0 e aceitamos H1.
+
+##### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$salario~df$cor, var.equal=T)
+```
+Conclusão: Como p-value = 4.144e-06 < 0.05, rejeitamos H0 e aceitamos H1.
+Logo: A média de salário entre brancos e não-brancos é diferente e em média os brancos possuem maior sálário que os não-brancos.
+
+## O Salário médio das pessoas casadas se difere das pessoas solteiras?
+```{r}
+summary(df$salario)
+summary(df$salario[df$est_civil==0]) #Salário Não Casados
+summary(df$salario[df$est_civil==1]) #Salário Casados
+
+basicStats(df$salario)
+basicStats(df$salario[df$est_civil==0]) #Salário Não Casados
+basicStats(df$salario[df$est_civil==1]) #Salário Casados
+```
+
+### Pressupostos
+#### Normalidade
+H0: os dados seguem uma distribuição normal.
+
+H1: os dados não seguem uma distribuição normal.
+```{r}
+shapiro.test(df$salario[df$est_civil==0]) #Salário Não Casados
+shapiro.test(df$salario[df$est_civil==1]) #Salário Casados
+```
+Conclusão: Para ambos os grupos, as distribuições não são normais, p-value < 0.05, portanto rejeitamos H0 e aceitamos H1.
+
+#### Homodedasticidade - Levene
+H0: as variâncias são iguais.
+
+H1: as variâncias são diferentes.
+```{r}
+leveneTest(df$salario, df$est_civil)
+```
+Conclusão: As variâncias dos grupos são diferentes, Pr(>F) (p-value) = 0.03557 < 0.05, rejeitamos H0 e aceitamos H1.
+
+#### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$salario~df$est_civil, var.equal=T)
+```
+Conclusão: Como p-value = 0.000236 < 0.05 = alpha, rejeitamos H0 e aceitamos H1.
+Logo: A média de salário entre casados e não-casados é diferente e em média os casados possuem maior sálário que os não-casados.
+
+## Considerando o sexo das pessoas e seu estado civil conjuntamente, é possível afirmar que algumas dos grupos formados possui média salarial diferente dos demais?
+```{r}
+homens_nao_casados <- subset(df, (sexo == 0) & (est_civil == 0))
+homens_casados <- subset(df, (sexo == 0) & (est_civil == 1))
+mulheres_nao_casadas <- subset(df, (sexo == 1) & (est_civil == 0))
+mulheres_casadas <- subset(df, (sexo == 1) & (est_civil == 1))
+
+summary(homens_nao_casados$salario)
+summary(homens_casados$salario)
+summary(mulheres_nao_casadas$salario)
+summary(mulheres_casadas$salario)
+
+basicStats(homens_nao_casados$salario)
+basicStats(homens_casados$salario)
+basicStats(mulheres_nao_casadas$salario)
+basicStats(mulheres_casadas$salario)
+
+```
+### Pressupostos
+#### Normalidade
+H0: os dados seguem uma distribuição normal.
+
+H1: os dados não seguem uma distribuição normal.
+```{r}
+shapiro.test(homens_nao_casados$salario)
+shapiro.test(homens_casados$salario)
+shapiro.test(mulheres_nao_casadas$salario)
+shapiro.test(mulheres_casadas$salario)
+```
+Conclusão: Para todos os grupos, as distribuições não são normais, p-value < 0.05, portanto rejeitamos H0 e aceitamos H1.
+
+#### Homodedasticidade - Levene
+H0: as variâncias são iguais.
+
+H1: as variâncias são diferentes.
+```{r}
+leveneTest(df$sexo, df$est_civil)
+```
+Conclusão: As variâncias dos grupos são diferentes, Pr(>F) (p-value) = 0.0202 < 0.05, rejeitamos H0 e aceitamos H1.
+
+#### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$sexo~df$est_civil, var.equal=T)
+```
+Conclusão: Como p-value = 0.001406 < 0.05 = alpha, rejeitamos H0 e aceitamos H1.
+
+Em média os homens casados possuem maior sálário e mulheres não casadas possuem menor salário.
+
+## O tempo de experiência médio é diferente para homens e mulheres?
+```{r}
+summary(df$experiencia)
+summary(df$experiencia[df$sexo==0]) #Experiência Homens
+summary(df$experiencia[df$sexo==1]) #Experiência Mulheres
+
+basicStats(df$experiencia)
+basicStats(df$experiencia[df$sexo==0]) #Experiência Homens
+basicStats(df$experiencia[df$sexo==1]) #Experiência Mulheres
+```
+
+### Pressupostos
+#### Normalidade
+H0: os dados seguem uma distribuição normal.
+
+H1: os dados não seguem uma distribuição normal.
+```{r}
+shapiro.test(df$experiencia[df$sexo==0]) #Salário Homens
+shapiro.test(df$experiencia[df$sexo==1]) #Salário Mulheres
+```
+Conclusão: Para ambos os grupos, as distribuições não são normais, p-value < 0.05, portanto rejeitamos H0 e Aceitamos H1.
+
+#### Homodedasticidade - Levene
+H0: as variâncias são iguais.
+
+H1: as variâncias são diferentes.
+```{r}
+leveneTest(df$experiencia, df$sexo)
+```
+Conclusão: As variâncias dos grupos são iguais, Pr(>F) (p-value) = 0.514 > 0.05, aceitamos H0 e rejeitamos H1.
+
+#### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$experiencia~df$sexo, var.equal=T)
+```
+Conclusão: Como p-value = 0.4164 > 0.05, aceitamos H0 e rejeitamos H1.
+Logo: O tempo de experiência médio entre homens e mulheres é semelhante e em média os homens possuem mais experiência que as mulheres.
+
+## A idade média dos casados é diferente da idade média dos solteiros?
+```{r}
+summary(df$idade)
+summary(df$idade[df$est_civil==0]) #Salário Não Casados
+summary(df$idade[df$est_civil==1]) #Salário Casados
+
+basicStats(df$idade)
+basicStats(df$idade[df$est_civil==0]) #Salário Não Casados
+basicStats(df$idade[df$est_civil==1]) #Salário Casados
+```
+
+### Pressupostos
+#### Normalidade
+H0: os dados seguem uma distribuição normal.
+
+H1: os dados não seguem uma distribuição normal.
+```{r}
+shapiro.test(df$idade[df$est_civil==0]) #Salário Não Casados
+shapiro.test(df$idade[df$est_civil==1]) #Salário Casados
+```
+Conclusão: Para o grupo dos não casados, a distrbuição não é normal 8.32e-14 < 0.05.
+Para o grupo dos casados, a distribução é normal, 0.07607 > 0.05.
+
+#### Homodedasticidade - Levene
+H0: as variâncias são iguais.
+
+H1: as variâncias são diferentes.
+```{r}
+leveneTest(df$idade, df$est_civil)
+```
+Conclusão: As variâncias dos grupos são iguais, Pr(>F) (p-value) = 0.17 > 0.05, aceitamos H0 e rejeitamos H1.
+
+#### Teste T -2 amostras Independentes
+H0: As médias dos grupos são iguais.
+
+H1: As médias dos grupos são diferentes.
+```{r}
+t.test(df$idade~df$est_civil, var.equal=T)
+```
+Conclusão: Como p-value = 1.296e-08 < 0.05 = alpha, rejeitamos H0 e aceitamos H1.
+Logo: A média de idade entre casados e não-casados é diferente e em média os casados possuem idade maior que os não-casados.
+
+# Questão 2
+Analisando o banco de dados apresentado, é possível afirmar que haveria alguma das relações destacadas a seguir? 
+Destaque o grau de associação para cada uma das relações apresentadas e verifique se seria significativo.
+
+## Há relação entre Salário e Experiência?
+### Correlação 
+H0: Não há uma associação (r = 0)
+
+H1: Há uma associação (r != 0)
+```{r}
+cor.test(df$salario, df$experiencia, method = "spearman")
+```
+Conclusão: O coeficiente de correlação foi de 0.2414725 com p-value = 2.2e-16 < 0.05 = alpha, Rejeitamos H0.
+Logo, há associação entre salário e experiência. 
+
+## Há relação entre Salário e tempo de Instrução?
+### Correlação
+H0: Não há uma associação (r = 0)
+
+H1: Há uma associação (r != 0)
+```{r}
+cor.test(df$salario, df$instrucao, method = "spearman")
+```
+Conclusão: O coeficiente de correlação foi de 0.4574217 com p-value = 2.2e-16 < 0.05 = alpha, Rejeitamos H0.
+Logo, há associação entre salário e instrução.
+
+## Há relação entre Salário e Idade dos indivíduos investigados?
+### Correlação
+H0: Não há uma associação (r = 0)
+
+H1: Há uma associação (r != 0)
+```{r}
+cor.test(df$salario, df$idade, method = "spearman")
+```
+Conclusão: O coeficiente de correlação foi de 0.3409942 com p-value = 2.2e-16 < 0.05 = alpha, Rejeitamos H0.
+Logo, há associação entre salário e idade.
+
+## Há relação entre a Experiência e a Idade dos Indivíduos?
+### Correlação
+H0: Não há uma associação (r = 0)
+
+H1: Há uma associação (r != 0)
+```{r}
+cor.test(df$experiencia, df$idade, method = "spearman")
+```
+Conclusão: O coeficiente de correlação foi de 0.971742 com p-value = 2.2e-16 < 0.05 = alpha, Rejeitamos H0.
+Logo, há associação significativa entre experiência e idade.
+
+# Questão 3
+O banco de dados descrito acima, foi utilizado para investigar o poder preditivo dos fatores destacados na base sobre o salário. 
+Desta forma apresente o modelo de regressão que ajude a entender a forma como cada uma destas variáveis explicativas explica o salário das pessoas investigadas.
+Considere o seguinte modelo e responda as questões que seguem:
+
+salario i = β0 + β1 sexo i + β2 cor i + β3 est_civil i + β4 instrucao i + β5 experiencia i + β6 idade i + ε i
+
+```{r}
+salario_mod <- lm(df$salario ~ df$sexo+df$cor+df$est_civil+df$instrucao+df$experiencia+df$idade)
+summary(salario_mod)
+```
+## Análise do Modelo
+###   R² - Coeficiente de Determinaçãoo
+R² = 0.3233 (32,33% da Variação do salário explicado pelas características da pessoa)
+
+###   Teste ANOVA - Significância do modelo como um todo.
+Conclusão: como o p-value= 2.2e-16(0.0000) < 0.05 = alpha, Rejeitamos H0 (modelo não significativo) e Aceitamos H1 (modelo significativo)
+Logo, existe uma coerência nas variáveis explicativas frente a variável dependente.
+
+###   Análise dos Coeficientes
+Conclusões: 
+
+b0 - É significativamente diferente de 0 (p-value (Pr(>|t|)=2.51e-12 < 0.05)
+
+b1 - É significativamten diferente de 0, logo, existe efeito do sexo sobre o salário.
+
+b2 - É significativo a alpha = 0,01, logo, existe efeito da cor sobre o salário.
+
+b3 - É significativo a alpha = 0,05, logo, existe efeito do estado civil sobre o salário.
+
+b4 - É significativamente diferente de zeo, logo, existe efeito da instrução sobre o salário.
+
+b5 - É significativamente diferente dezeo, logo, existe efeito da experiência sobre o salário.
+
+b6 - A idade não foi definida por causa de singularidade, aparentemente ela não é linearmente independente.
+
+### Sabendo que as variáveis β1 , β2 e β3 são todas variáveis dummies (dicotômicas), qual deveria ser a interpretação dada destes coeficientes sobre o salário?
+As variáveis β1 , β2 e β3 representam quanto salário varia quando o sexo, cor e estado civil variam de 0 para 1 ou vice-versa. 
+
+### Qual é o poder explicativo do modelo (percentual de variância explicada)?
+O percentual de variância do modelo é de 32,33%
+
+### De modelo geral, o modelo foi significativo?
+Penso que o modelo foi significativo para o campo de estudo.
+
+### É possível afirmar que o grau de instrução do indivíduo afeta significativamente no seu salário? A que nível de significância?
+É significativamente diferente de 0 (p-value (Pr(>|t|)=2e-16 < 0.05), logo, existe efeito da instrução sobre o salário.
+
+### É possível afirmar que o estado civil do indivíduo afeta significativamente no seu salário? A que nível de significância?
+É significativo a alpha = 0,05(p-value (Pr(>|t|)=0.03052), logo, existe efeito do estado civil sobre o salário.
+
+### É possível afirmar que a experiência do indivíduo afeta significativamente no seu salário? A que nível de significância?
+É significativamente diferente de 0 (p-value (Pr(>|t|)=2e-16 < 0.05), logo, existe efeito da experiência sobre o salário.
+
+### É possível afirmar que o sexo do indivíduo afeta significativamente no seu salário? A que nível de significância?
+É significativamente diferente de 0 (p-value (Pr(>|t|)=2e-16 < 0.05), logo, existe efeito do sexo sobre o salário.
+
+### Considere o modelo de modo geral, principalmente os sinais de cada um dos coeficientes do modelo de regressão, os resultados fazem sentido conceitualmente para você? Justifique.
+De modo geral considero que os resultados fazem sentido. A maioria dos coeficientes são estatisticamente significativos.
+A instrução e experiência são os que foram de acordo com o meu conceito esperado sobre o modelo.
+O sexo eu imaginaria que não seria tão significativo.
