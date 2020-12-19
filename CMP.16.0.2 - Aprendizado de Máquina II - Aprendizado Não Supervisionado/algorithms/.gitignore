@@ -1,0 +1,9 @@
+*.class
+.idea
+*.iml
+mods
+target
+.classpath
+.project
+*.settings
+settings.json
