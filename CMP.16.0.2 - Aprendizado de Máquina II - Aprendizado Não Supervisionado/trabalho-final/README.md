@@ -1,10 +1,16 @@
 # Trabalho Final - Principal Component Analysis
 
-### Requirements
+### Requisitos
 
-// TODO
+- Anaconda3
 
-### Usage
+### Configuração
 
-- With a CLI (command-line interpreter), navigate to the `pca` folder;
-- To start the aplication, run `python . --images-path <PATH_TO_MY_IMAGES>`, replacing `<PATH_TO_MY_IMAGES>` with the path you desire.
+- Utilizando um CLI (interpretador de linha de comando), navegue até a pasta `pca`;
+- Execute o comando `conda env create -f environment.yml` para criar o ambiente contendo a versão do python e dependências necessárias para a aplicação;
+
+### Utilização
+
+- Utilizando um CLI (interpretador de linha de comando), navegue até a pasta `pca`;
+- Execute o comando `conda activate pca-env` para ativar o ambiente de execução da aplicação;
+- Para inicializar a aplicação, execute `python . --images-path <PATH_TO_MY_IMAGES>`, substituindo `<PATH_TO_MY_IMAGES>` com o caminho que desejar.
