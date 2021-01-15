@@ -6,7 +6,7 @@
 
 ### Utilização
 
-- Acesse o Google Colaboratory: https://colab.research.google.com;
+- Acesse o [Google Colaboratory](https://colab.research.google.com);
 - Faça upload do arquivo PCA.ipynb;
 - Na aba lateral esquerda > Arquivos, faça upload das imagens (crie uma nova pasta se desejar);
 - Na seção "Execução" (final do PCA.ipynb), adeque a variável path para apontar para o respectivo caminho das imagens;
