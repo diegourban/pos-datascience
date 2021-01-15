@@ -2,15 +2,12 @@
 
 ### Requisitos
 
-- Anaconda3
-
-### Configuração
-
-- Utilizando um CLI (interpretador de linha de comando), navegue até a pasta `pca`;
-- Execute o comando `conda env create -f environment.yml` para criar o ambiente contendo a versão do python e dependências necessárias para a aplicação;
+- Browser
 
 ### Utilização
 
-- Utilizando um CLI (interpretador de linha de comando), navegue até a pasta `pca`;
-- Execute o comando `conda activate pca-env` para ativar o ambiente de execução da aplicação;
-- Para inicializar a aplicação, execute `python . --images-path <PATH_TO_MY_IMAGES>`, substituindo `<PATH_TO_MY_IMAGES>` com o caminho que desejar.
+- Acesse o Google Colaboratory: https://colab.research.google.com;
+- Faça upload do arquivo PCA.ipynb;
+- Na aba lateral esquerda > Arquivos, faça upload das imagens (crie uma nova pasta se desejar);
+- Na seção "Execução" (final do PCA.ipynb), adeque a variável path para apontar para o respectivo caminho das imagens;
+- No menu "Ambiente de Execução", clique na opção "Executar tudo" (Ctrl + F9).
