@@ -1,5 +1,8 @@
 # Trabalho Final - Principal Component Analysis
 
+Trabalho final da disciplina de Aprendizado de Máquina - Aprendizado não supervisionado.
+Trata-se da implementação e aplicação de Principal Component Analysis (PCA) para o reconhecimento facial. A base de dados utilizada consiste em 400 imagens da base ORL e mais 10 imagens pessoais. A estratégia de hold-out utilizada foi de 70% para treino e 30% para teste.
+
 ### Requisitos
 
 - Browser
